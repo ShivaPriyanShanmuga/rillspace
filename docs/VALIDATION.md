@@ -30,5 +30,3 @@ The user's approved email has a private viewer grant. The fresh ChatGPT consent 
 - Fresh hosted access under the approved user account.
 - Final demo recording and submission receipt.
 
-- Phone-sized 390×844 layout inspected: vertically stacked 3D worlds, visible command input, and document width no larger than the viewport.
-- Saved the forest experiment, opened its exact 90-second state, then applied typed pavement/pause commands through the UI.

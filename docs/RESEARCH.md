@@ -1,4 +1,6 @@
-# TerraFork: bounded competitive research
+# Rillspace: bounded competitive research
+
+This research used the working name TerraFork. The implemented project was named Rillspace after this naming/positioning review.
 
 Researched 2026-11-01 using primary project, university, and developer pages. This is a product-positioning scan, not a trademark clearance or exhaustive novelty search.
 
