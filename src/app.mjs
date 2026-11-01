@@ -32,6 +32,7 @@ function refresh(){
   $('#time-label').textContent=time===0?'Before the rain':time>=DURATION?'Storm complete':`${time.toFixed(0)}s into the experiment`;
   $('#run-status').textContent=running?'Same rainfall in both worlds':time===0?'Ready for your first experiment':time>=DURATION?'Rewind or make another decision':'Paused · drag the timeline to rewind';
   $('#live-tag').textContent=running?'RUNNING':time>=DURATION?'COMPLETE':time===0?'READY':'PAUSED';
+  $('#run-now').textContent=running?'Pause the storm Ⅱ':time>=DURATION?'Replay the storm ↗':'Run the storm ↗';
   $('#play-button').innerHTML=icon(running?'pause':'play');$('#play-button').setAttribute('aria-label',running?'Pause the storm':time>=DURATION?'Replay the storm':'Start the storm');
   if(document.activeElement!==$('#timeline'))$('#timeline').value=String(time);
   $('#undo-button').disabled=undo.length===0;$('#saved-count').textContent=String(saved.length);
@@ -72,7 +73,7 @@ function undoLast(){const previous=undo.pop();if(!previous)return toast('Make a 
 function dialog(title,kicker,html){stopVoice();$('#dialog-title').textContent=title;$('#dialog-kicker').textContent=kicker;$('#dialog-content').innerHTML=html;if(!$('#dialog').open)$('#dialog').showModal();}
 $('#close-dialog').onclick=()=>$('#dialog').close();$('#dialog').addEventListener('click',e=>{if(e.target===$('#dialog')){const r=e.target.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)e.target.close();}});
 function modelDialog(){
-  const a=stats(worlds.future),b=stats(worlds.baseline),fmt=n=>n.toLocaleString(undefined,{maximumFractionDigits:3});
+  const a=stats(worlds.future),b=stats(worlds.baseline),fmt=n=>n!==0&&Math.abs(n)<.001?n.toExponential(2):n.toLocaleString(undefined,{maximumFractionDigits:3});
   dialog('Every drop has a destination.','LOOK UNDER THE SURFACE',`<p>Rillspace is an illustrative watershed experiment, computed locally on a ${SIZE} × ${SIZE} grid. Both worlds start dry, use seed ${config.seed}, and receive the same ${config.intensity}× storm. Your land cover and barrier are the changed variables.</p><table><thead><tr><th>Water accounting · model units</th><th>Original</th><th>Your future</th></tr></thead><tbody>${[['Rain added','rain'],['Still on the surface','stored'],['Absorbed by soil','absorbed'],['Left the boundary','outflow']].map(([label,key])=>`<tr><td>${label}</td><td>${fmt(b[key])}</td><td>${fmt(a[key])}</td></tr>`).join('')}<tr><td>Unaccounted water</td><td class="ledger-pass">${fmt(Math.abs(b.balanceError))}</td><td class="ledger-pass">${fmt(Math.abs(a.balanceError))}</td></tr></tbody></table><h3>What the model does</h3><p>Rain adds water. Soil absorbs it toward a bounded capacity. Surface water moves toward a lower water level through conservative, availability-limited neighbor transfers. Boundary flow leaves the island. The dam raises terrain cells; forest increases soil capacity and resistance; paving reduces absorption.</p><h3>What the numbers mean</h3><p>These are normalized model units, not real rainfall or flood depths. The model omits groundwater, momentum, drainage infrastructure and calibrated geography. It is a playground for testing assumptions, not a forecast or a planning tool.</p><h3>Voice and privacy</h3><p>Commands use an explicit local grammar, not a cloud AI model. Browser speech recognition may use your browser provider's service; typed commands and suggestion buttons always work. Experiments are saved in this browser. No camera, paid API, card or bank details are needed.</p><div class="dialog-actions"><button class="button primary" id="export-data">Export experiment data</button><button class="button secondary" id="model-reset">Return to the original</button></div>`);
   $('#export-data').onclick=()=>download('rillspace-experiment.json',new Blob([JSON.stringify({format:'rillspace-experiment-v1',config,time:worlds.future.time,baseline:b,future:a,baselineOutflow:worlds.baseline.samples,futureOutflow:worlds.future.samples,model:'Illustrative finite-volume watershed; not a real-world forecast.'},null,2)],{type:'application/json'}));
   $('#model-reset').onclick=()=>{apply('reset');$('#dialog').close();};
@@ -100,6 +101,7 @@ $$('[data-command]').forEach(b=>b.onclick=()=>apply(b.dataset.command));
 $('#compare-toggle').onclick=()=>{setCompare(!compare);refresh();};
 $('#view-reset').onclick=()=>view?.reset();
 $('#play-button').onclick=()=>{if(running)running=false;else{if(worlds.future.time>=DURATION)worlds=comparison(config,0);running=true;}refresh();};
+$('#run-now').onclick=()=>$('#play-button').click();
 $('#replay-button').onclick=()=>apply('replay');$('#undo-button').onclick=undoLast;
 $('#timeline').oninput=e=>{running=false;worlds=comparison(config,Number(e.target.value));accumulator=0;refresh();};$('#timeline').onchange=writeLocal;
 $('#speed-button').onclick=()=>{speed=speed===2?4:speed===4?8:2;$('#speed-button').textContent=speed+'×';};
