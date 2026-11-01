@@ -1,0 +1,17 @@
+{
+  "name": "rillspace",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Same island. Same storm. One decision. A visual counterfactual playground.",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --port 4180 --strictPort",
+    "build": "vite build",
+    "preview": "vite preview --host 127.0.0.1 --port 4180 --strictPort",
+    "test": "node --test test/*.test.mjs",
+    "check": "node --check src/app.mjs && node --check src/world.mjs && node --test test/*.test.mjs"
+  },
+  "dependencies": { "three": "0.187.0" },
+  "devDependencies": { "vite": "8.3.5" },
+  "engines": { "node": ">=22.12" }
+}
