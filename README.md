@@ -4,6 +4,10 @@
 
 A browser-based 3D counterfactual playground for curious students and teachers. Say or tap a change, replay an identical storm across two landscapes, and inspect the computed difference. Built for Arbiter Hacks V1, General Track.
 
+[Open Rillspace](https://rillspace-lab.wirylapel.chatgpt.site) · private preview for approved ChatGPT accounts.
+
+![Actual Rillspace experiment, showing two computed futures](docs/images/preview.png)
+
 ## Run
 
 Node 22.12+.
